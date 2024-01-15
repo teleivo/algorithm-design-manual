@@ -3,23 +3,23 @@ package parens
 
 // isBalanced solves exercise 3.10 3-1.
 func isBalanced(in string) bool {
-	openParens := make([]byte, 0, len(in))
+	var openParens int
 
 	for i := 0; i < len(in); i++ {
 		if in[i] == '(' {
-			openParens = append(openParens, '(')
+			openParens++
 			continue
 		}
 
 		// closing paren without an opening one
-		if len(openParens) == 0 {
+		if openParens == 0 {
 			return false
 		}
 
 		// consume opening paren for closing one
-		openParens = openParens[:len(openParens)-1]
+		openParens--
 	}
 
 	// opening paren without an closing one
-	return len(openParens) == 0
+	return openParens == 0
 }
