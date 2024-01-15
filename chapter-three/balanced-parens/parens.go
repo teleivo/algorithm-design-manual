@@ -2,7 +2,7 @@
 package parens
 
 // isBalanced solves exercise 3.10 3-1.
-func isBalanced(in string) bool {
+func isBalanced(in string) (int, bool) {
 	var openParens int
 
 	for i := 0; i < len(in); i++ {
@@ -13,13 +13,14 @@ func isBalanced(in string) bool {
 
 		// closing paren without an opening one
 		if openParens == 0 {
-			return false
+			return i, false
 		}
 
 		// consume opening paren for closing one
 		openParens--
 	}
 
+	// TODO
 	// opening paren without an closing one
-	return openParens == 0
+	return 0, openParens == 0
 }

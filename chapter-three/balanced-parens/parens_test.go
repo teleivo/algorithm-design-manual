@@ -5,40 +5,47 @@ import "testing"
 func TestBalancedParens(t *testing.T) {
 
 	tests := []struct {
-		in   string
-		want bool
+		in      string
+		wantPos int
+		wantOk  bool
 	}{
 		{
-			in:   "()",
-			want: true,
+			in:      "()",
+			wantPos: 0,
+			wantOk:  true,
 		},
 		{
-			in:   "((())())()",
-			want: true,
+			in:      "((())())()",
+			wantPos: 0,
+			wantOk:  true,
 		},
 		{
-			in:   ")",
-			want: false,
+			in:      ")",
+			wantPos: 0,
+			wantOk:  false,
 		},
 		{
-			in:   "(",
-			want: false,
+			in:      "(",
+			wantPos: 0,
+			wantOk:  false,
 		},
 		{
-			in:   "())",
-			want: false,
+			in:      "())",
+			wantPos: 2,
+			wantOk:  false,
 		},
 		{
-			in:   ")()(",
-			want: false,
+			in:      ")()(",
+			wantPos: 0,
+			wantOk:  false,
 		},
 	}
 
 	for _, tc := range tests {
-		got := isBalanced(tc.in)
+		gotPos, gotOk := isBalanced(tc.in)
 
-		if got != tc.want {
-			t.Errorf("isBalanced(%q) = %t want %t", tc.in, got, tc.want)
+		if gotPos != tc.wantPos || gotOk != tc.wantOk {
+			t.Errorf("isBalanced(%q) = (%d, %t) want (%d, %t)", tc.in, gotPos, gotOk, tc.wantPos, tc.wantOk)
 		}
 	}
 }
