@@ -1,5 +1,5 @@
-// Package reverse reverses a singly linked list.
-package reverse
+// Package implements a singly linked list.
+package list
 
 type node struct {
 	Value int
