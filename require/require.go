@@ -1,6 +1,7 @@
 package require
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -14,19 +15,19 @@ func NoError(t *testing.T, err error) {
 	}
 }
 
-func False(t *testing.T, method string, got bool) {
+func False(t *testing.T, got bool) {
 	t.Helper()
 
 	if got {
-		t.Fatalf("stack.%s() = %t want %t instead", method, got, false)
+		t.Fatalf(fmt.Sprintf("got %t want %t instead", got, false))
 	}
 }
 
-func True(t *testing.T, method string, got bool) {
+func True(t *testing.T, got bool) {
 	t.Helper()
 
 	if !got {
-		t.Fatalf("stack.%s() = %t want %t instead", method, got, true)
+		t.Fatalf(fmt.Sprintf("got %t want %t instead", got, true))
 	}
 }
 

@@ -10,7 +10,7 @@ func TestStack(t *testing.T) {
 	t.Run("DuplicateMins", func(t *testing.T) {
 		st := &stack{}
 
-		require.True(t, "isEmpty", st.isEmpty())
+		require.True(t, st.isEmpty())
 
 		// PUSH
 		st.push(2)
@@ -72,16 +72,16 @@ func TestStack(t *testing.T) {
 		require.NoError(t, err)
 		require.Equals(t, "pop", got, 2)
 
-		require.True(t, "isEmpty", st.isEmpty())
+		require.True(t, st.isEmpty())
 	})
 
 	t.Run("Basic", func(t *testing.T) {
 		st := &stack{}
 
-		require.True(t, "isEmpty", st.isEmpty())
+		require.True(t, st.isEmpty())
 
 		st.push(1)
-		require.False(t, "isEmpty", st.isEmpty())
+		require.False(t, st.isEmpty())
 
 		got, err := st.findmin()
 		require.NoError(t, err)
@@ -91,7 +91,7 @@ func TestStack(t *testing.T) {
 		require.NoError(t, err)
 		require.Equals(t, "pop", got, 1)
 
-		require.True(t, "isEmpty", st.isEmpty())
+		require.True(t, st.isEmpty())
 
 		st.push(1)
 		st.push(4)
