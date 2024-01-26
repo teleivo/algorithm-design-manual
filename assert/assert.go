@@ -3,7 +3,6 @@ package assert
 import (
 	"testing"
 
-	"github.com/google/go-cmp/cmp"
 	"github.com/teleivo/algorithm-design-manual/test/report"
 )
 
@@ -34,15 +33,11 @@ func Nil(t *testing.T, got any) {
 func Equals(t *testing.T, method string, got, want int) {
 	t.Helper()
 
-	if got != want {
-		t.Errorf("stack.%s() = %d want %d instead", method, got, want)
-	}
+	report.Equals(t.Errorf, got, want)
 }
 
 func EqualValues(t *testing.T, method string, in, got, want any) {
 	t.Helper()
 
-	if diff := cmp.Diff(want, got); diff != "" {
-		t.Errorf("%s(%v) mismatch (-want +got):\n%s", method, in, diff)
-	}
+	report.EqualValues(t.Errorf, got, want)
 }

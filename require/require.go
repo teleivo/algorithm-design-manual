@@ -3,7 +3,6 @@ package require
 import (
 	"testing"
 
-	"github.com/google/go-cmp/cmp"
 	"github.com/teleivo/algorithm-design-manual/test/report"
 )
 
@@ -34,15 +33,11 @@ func Nil(t *testing.T, got any) {
 func Equals(t *testing.T, method string, got, want any) {
 	t.Helper()
 
-	if got != want {
-		t.Fatalf("stack.%s() = %v want %v instead", method, got, want)
-	}
+	report.Equals(t.Fatalf, got, want)
 }
 
 func EqualValues(t *testing.T, method string, in, got, want any) {
 	t.Helper()
 
-	if diff := cmp.Diff(want, got); diff != "" {
-		t.Fatalf("%s(%v) mismatch (-want +got):\n%s", method, in, diff)
-	}
+	report.EqualValues(t.Fatalf, got, want)
 }
