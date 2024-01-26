@@ -24,3 +24,9 @@ func True(fn report, got bool) {
 		fn(fmt.Sprintf("got %t want %t instead", got, true))
 	}
 }
+
+func Nil(fn report, got any) {
+	if got != nil {
+		fn(fmt.Sprintf("got %v want nil instead", got))
+	}
+}

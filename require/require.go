@@ -25,12 +25,10 @@ func True(t *testing.T, got bool) {
 	report.True(t.Fatalf, got)
 }
 
-func Nil(t *testing.T, method string, got any) {
+func Nil(t *testing.T, got any) {
 	t.Helper()
 
-	if got != nil {
-		t.Fatalf("stack.%s() = %v want nil instead", method, got)
-	}
+	report.Nil(t.Fatalf, got)
 }
 
 func Equals(t *testing.T, method string, got, want any) {

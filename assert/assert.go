@@ -25,6 +25,12 @@ func True(t *testing.T, method string, got bool) {
 	report.True(t.Errorf, got)
 }
 
+func Nil(t *testing.T, got any) {
+	t.Helper()
+
+	report.Nil(t.Errorf, got)
+}
+
 func Equals(t *testing.T, method string, got, want int) {
 	t.Helper()
 
