@@ -10,9 +10,7 @@ import (
 func NoError(t *testing.T, err error) {
 	t.Helper()
 
-	if err != nil {
-		t.Errorf("expected no error, instead got %v", err)
-	}
+	report.NoError(t.Errorf, err)
 }
 
 func False(t *testing.T, method string, got bool) {
