@@ -93,31 +93,31 @@ func TestList(t *testing.T) {
 
 		got := l.predecessor(n)
 
-		require.Equals(t, "predecessor", got.Value, 2)
+		require.Equals(t, got.Value, 2)
 
 		got = l.successor(n)
 
-		require.Equals(t, "successor", got.Value, 7)
+		require.Equals(t, got.Value, 7)
 
 		n = l.search(7)
 
 		got = l.predecessor(n)
 
-		require.Equals(t, "predecessor", got.Value, 3)
+		require.Equals(t, got.Value, 3)
 
 		got = l.successor(n)
 
-		require.Equals(t, "successor", got.Value, 8)
+		require.Equals(t, got.Value, 8)
 
 		n = l.search(1)
 
 		got = l.predecessor(n)
 
-		require.Equals(t, "predecessor", 0, got.Value)
+		require.Equals(t, 0, got.Value)
 
 		got = l.successor(n)
 
-		require.Equals(t, "successor", got.Value, 2)
+		require.Equals(t, got.Value, 2)
 	})
 
 	t.Run("MinAndMax", func(t *testing.T) {
@@ -128,40 +128,40 @@ func TestList(t *testing.T) {
 		gotMin := l.minimum()
 		gotMax := l.maximum()
 
-		require.Equals(t, "minimum", gotMin.Value, 2)
-		require.Equals(t, "maximum", gotMax.Value, 2)
+		require.Equals(t, gotMin.Value, 2)
+		require.Equals(t, gotMax.Value, 2)
 
 		l.insert(&node{Value: 8})
 
 		gotMin = l.minimum()
 		gotMax = l.maximum()
 
-		require.Equals(t, "minimum", gotMin.Value, 2)
-		require.Equals(t, "maximum", gotMax.Value, 8)
+		require.Equals(t, gotMin.Value, 2)
+		require.Equals(t, gotMax.Value, 8)
 
 		l.insert(&node{Value: 1})
 
 		gotMin = l.minimum()
 		gotMax = l.maximum()
 
-		require.Equals(t, "minimum", gotMin.Value, 1)
-		require.Equals(t, "maximum", gotMax.Value, 8)
+		require.Equals(t, gotMin.Value, 1)
+		require.Equals(t, gotMax.Value, 8)
 
 		l.delete(l.search(1))
 
 		gotMin = l.minimum()
 		gotMax = l.maximum()
 
-		require.Equals(t, "minimum", gotMin.Value, 2)
-		require.Equals(t, "maximum", gotMax.Value, 8)
+		require.Equals(t, gotMin.Value, 2)
+		require.Equals(t, gotMax.Value, 8)
 
 		l.delete(l.search(8))
 
 		gotMin = l.minimum()
 		gotMax = l.maximum()
 
-		require.Equals(t, "minimum", gotMin.Value, 2)
-		require.Equals(t, "maximum", gotMax.Value, 2)
+		require.Equals(t, gotMin.Value, 2)
+		require.Equals(t, gotMax.Value, 2)
 	})
 }
 

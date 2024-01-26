@@ -30,7 +30,7 @@ func Nil(t *testing.T, got any) {
 	report.Nil(t.Fatalf, got)
 }
 
-func Equals(t *testing.T, method string, got, want any) {
+func Equals(t *testing.T, got, want any) {
 	t.Helper()
 
 	report.Equals(t.Fatalf, got, want)

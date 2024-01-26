@@ -21,13 +21,13 @@ func TestArray(t *testing.T) {
 
 				a.insert(i, i)
 
-				require.Equals(t, "len", a.len(), i+1)
+				require.Equals(t,  a.len(), i+1)
 				// double if full
 				if curLen == curCap {
 					wantCap := max(curCap*2, 1)
-					require.Equals(t, "cap", a.cap(), wantCap)
+					require.Equals(t, a.cap(), wantCap)
 				} else {
-					require.Equals(t, "cap", a.cap(), curCap)
+					require.Equals(t,  a.cap(), curCap)
 				}
 			}
 		}
@@ -35,13 +35,13 @@ func TestArray(t *testing.T) {
 		{
 			t.Log("InsertBelowLen")
 
-			require.Equals(t, "len", a.len(), 16)
-			require.Equals(t, "cap", a.cap(), 16)
+			require.Equals(t,  a.len(), 16)
+			require.Equals(t,  a.cap(), 16)
 
 			a.insert(15, 90)
 
-			require.Equals(t, "len", a.len(), 16)
-			require.Equals(t, "cap", a.cap(), 16)
+			require.Equals(t,  a.len(), 16)
+			require.Equals(t,  a.cap(), 16)
 		}
 
 		{
@@ -55,13 +55,13 @@ func TestArray(t *testing.T) {
 
 				a.delete()
 
-				require.Equals(t, "len", a.len(), i-1)
+				require.Equals(t,  a.len(), i-1)
 				// shrink by half if quarter full
 				if curLen == curCap/4 {
 					wantCap := curCap / 2
-					require.Equals(t, "cap", a.cap(), wantCap)
+					require.Equals(t, a.cap(), wantCap)
 				} else {
-					require.Equals(t, "cap", a.cap(), curCap)
+					require.Equals(t, a.cap(), curCap)
 				}
 			}
 		}
@@ -72,8 +72,8 @@ func TestArray(t *testing.T) {
 
 		a.insert(110, 32)
 
-		require.Equals(t, "get", a.get(110), 32)
-		require.Equals(t, "len", a.len(), 111)
-		require.Equals(t, "cap", a.cap(), 111)
+		require.Equals(t,  a.get(110), 32)
+		require.Equals(t,  a.len(), 111)
+		require.Equals(t,  a.cap(), 111)
 	})
 }
