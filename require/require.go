@@ -1,10 +1,10 @@
 package require
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/teleivo/algorithm-design-manual/test/report"
 )
 
 func NoError(t *testing.T, err error) {
@@ -18,17 +18,13 @@ func NoError(t *testing.T, err error) {
 func False(t *testing.T, got bool) {
 	t.Helper()
 
-	if got {
-		t.Fatalf(fmt.Sprintf("got %t want %t instead", got, false))
-	}
+	report.False(t.Fatalf, got)
 }
 
 func True(t *testing.T, got bool) {
 	t.Helper()
 
-	if !got {
-		t.Fatalf(fmt.Sprintf("got %t want %t instead", got, true))
-	}
+	report.True(t.Fatalf, got)
 }
 
 func Nil(t *testing.T, method string, got any) {

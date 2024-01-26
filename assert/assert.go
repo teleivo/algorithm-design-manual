@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/teleivo/algorithm-design-manual/test/report"
 )
 
 func NoError(t *testing.T, err error) {
@@ -17,17 +18,13 @@ func NoError(t *testing.T, err error) {
 func False(t *testing.T, method string, got bool) {
 	t.Helper()
 
-	if got {
-		t.Errorf("stack.%s() = %t want %t instead", method, got, false)
-	}
+	report.False(t.Errorf, got)
 }
 
 func True(t *testing.T, method string, got bool) {
 	t.Helper()
 
-	if !got {
-		t.Errorf("stack.%s() = %t want %t instead", method, got, true)
-	}
+	report.True(t.Errorf, got)
 }
 
 func Equals(t *testing.T, method string, got, want int) {
