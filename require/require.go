@@ -36,7 +36,7 @@ func Equals(t *testing.T, got, want any) {
 	report.Equals(t.Fatalf, got, want)
 }
 
-func EqualValues(t *testing.T, method string, in, got, want any) {
+func EqualValues(t *testing.T, in, got, want any) {
 	t.Helper()
 
 	report.EqualValues(t.Fatalf, got, want)
