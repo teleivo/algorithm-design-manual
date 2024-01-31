@@ -5,3 +5,6 @@ Hi 😁 this is one of my learning repositories. I go through some of the exerci
 Design Manual book https://www.algorist.com. It is a great book you can go through together with the
 lectures.
 
+Note that some the design decisions are optimized for convenience in testing and actually
+implementing a solution. Most of the time the naive assumption that user input is valid is made. The
+book has so many exercises that I cannot put in the same effort as I would for production code 😅.

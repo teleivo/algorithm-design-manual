@@ -2,6 +2,7 @@ package report
 
 import (
 	"fmt"
+	"testing"
 
 	"github.com/google/go-cmp/cmp"
 )
@@ -9,37 +10,49 @@ import (
 // report notifies a user of a failed assertion. Functions like t.Errorf, t.Fatalf.
 type report func(string, ...any)
 
-func NoError(fn report, err error) {
+func NoError(t *testing.T, fn report, err error) {
+	t.Helper()
+
 	if err != nil {
 		fn(fmt.Sprintf("expected no error, instead got %v", err))
 	}
 }
 
-func False(fn report, got bool) {
+func False(t *testing.T, fn report, got bool) {
+	t.Helper()
+
 	if got {
 		fn(fmt.Sprintf("got %t want %t instead", got, false))
 	}
 }
 
-func True(fn report, got bool) {
+func True(t *testing.T, fn report, got bool) {
+	t.Helper()
+
 	if !got {
 		fn(fmt.Sprintf("got %t want %t instead", got, true))
 	}
 }
 
-func Nil(fn report, got any) {
+func Nil(t *testing.T, fn report, got any) {
+	t.Helper()
+
 	if got != nil {
 		fn(fmt.Sprintf("got %v want nil instead", got))
 	}
 }
 
-func Equals(fn report, got, want any) {
+func Equals(t *testing.T, fn report, got, want any) {
+	t.Helper()
+
 	if got != want {
 		fn(fmt.Sprintf("got %v want %v instead", got, want))
 	}
 }
 
-func EqualValues(fn report, got, want any) {
+func EqualValues(t *testing.T, fn report, got, want any) {
+	t.Helper()
+
 	if diff := cmp.Diff(want, got); diff != "" {
 		fn(fmt.Sprintf("mismatch (-want +got):\n%s", diff))
 	}

@@ -9,35 +9,35 @@ import (
 func NoError(t *testing.T, err error) {
 	t.Helper()
 
-	report.NoError(t.Fatalf, err)
+	report.NoError(t, t.Fatalf, err)
 }
 
 func False(t *testing.T, got bool) {
 	t.Helper()
 
-	report.False(t.Fatalf, got)
+	report.False(t, t.Fatalf, got)
 }
 
 func True(t *testing.T, got bool) {
 	t.Helper()
 
-	report.True(t.Fatalf, got)
+	report.True(t, t.Fatalf, got)
 }
 
 func Nil(t *testing.T, got any) {
 	t.Helper()
 
-	report.Nil(t.Fatalf, got)
+	report.Nil(t, t.Fatalf, got)
 }
 
 func Equals(t *testing.T, got, want any) {
 	t.Helper()
 
-	report.Equals(t.Fatalf, got, want)
+	report.Equals(t, t.Fatalf, got, want)
 }
 
 func EqualValues(t *testing.T, in, got, want any) {
 	t.Helper()
 
-	report.EqualValues(t.Fatalf, got, want)
+	report.EqualValues(t, t.Fatalf, got, want)
 }
