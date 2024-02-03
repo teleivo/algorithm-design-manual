@@ -56,9 +56,21 @@ func TestDepth(t *testing.T) {
 		},
 	}
 
-	for _, tc := range tests {
-		got := depth(tc.in)
+	t.Run("depth", func(t *testing.T) {
+		for _, tc := range tests {
 
-		assert.Equals(t, got, tc.want)
-	}
+			got := depth(tc.in)
+
+			assert.Equals(t, got, tc.want)
+		}
+	})
+
+	t.Run("depthIter", func(t *testing.T) {
+		for _, tc := range tests {
+
+			got := depthIter(tc.in)
+
+			assert.Equals(t, got, tc.want)
+		}
+	})
 }

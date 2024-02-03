@@ -31,3 +31,36 @@ func maxDepth(n *node, depth int) int {
 	// if n is nil maxDepth(nil, 1) is odd
 	return depth + 1
 }
+
+// depth solves exercise 3.10 3-12.
+// Uses an iterative algorithm that runs in O(N) time.
+func depthIter(n *node) int {
+	var maxDepth int
+	nodes := []*node{n} // explicit stack
+
+	for len(nodes) != 0 {
+		n := nodes[0]
+		if n == nil {
+			return maxDepth
+		}
+		if len(nodes) > 1 {
+			nodes = nodes[1:]
+		} else {
+			nodes = nil
+		}
+
+		if n.left != nil && n.right != nil {
+			nodes = append(nodes, n.left)
+			nodes = append(nodes, n.right)
+			maxDepth++
+		} else if n.left != nil {
+			maxDepth++
+			nodes = append(nodes, n.left)
+		} else if n.right != nil {
+			maxDepth++
+			nodes = append(nodes, n.right)
+		}
+	}
+
+	return maxDepth + 1
+}
