@@ -42,6 +42,14 @@ func Nil(t *testing.T, fn report, got any) {
 	}
 }
 
+func NotNil(t *testing.T, fn report, got any) {
+	t.Helper()
+
+	if got == nil {
+		fn(fmt.Sprintf("got nil want != nil instead", got))
+	}
+}
+
 func Equals(t *testing.T, fn report, got, want any) {
 	t.Helper()
 

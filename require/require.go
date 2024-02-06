@@ -30,6 +30,12 @@ func Nil(t *testing.T, got any) {
 	report.Nil(t, t.Fatalf, got)
 }
 
+func NotNil(t *testing.T, got any) {
+	t.Helper()
+
+	report.NotNil(t, t.Fatalf, got)
+}
+
 func Equals(t *testing.T, got, want any) {
 	t.Helper()
 
