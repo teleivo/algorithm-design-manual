@@ -111,17 +111,13 @@ func swappedIter(n *node) (*node, *node) {
 		}
 
 		if err1 != nil && err2 != nil {
-			fmt.Println("found 2 errors")
 			// nodes in different subtrees have been swapped
 			if isInRange(err1.n, err2.bounds) && isInRange(err2.n, err1.bounds) {
-				fmt.Println("nodes from different subtrees")
 				return err1.n, err2.n
 			}
 
-			// TODO clean up
 			// nodes in the same subtree have been swapped
 			if isLeftChild(err1.n) {
-				fmt.Println("left child")
 				// try making err2.n child node the parent of err1.n
 				newBounds := nodeRange{lower: err1.bounds.lower, upper: err2.n}
 				if isInRange(err1.n, newBounds) && isInRange(err1.n.Parent, err2.bounds) {
@@ -142,14 +138,13 @@ func swappedIter(n *node) (*node, *node) {
 
 	// if we only found one node that is out of place it has been swapped with the bound it violates
 	if err1 != nil && err2 == nil {
-		fmt.Printf("err1 %v\n", err1)
 		if isSmallerThanLower(err1.n, err1.bounds.lower) {
 			return err1.n, err1.bounds.lower
 		}
 		return err1.n, err1.bounds.upper
 	}
 
-	return err1.n.Parent, err2.n
+	return nil, nil
 }
 
 func isOutOfRange(n *node, bounds nodeRange) bool {
