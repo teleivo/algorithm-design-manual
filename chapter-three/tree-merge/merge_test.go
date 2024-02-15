@@ -8,7 +8,8 @@ import (
 
 func TestMergeImplementations(t *testing.T) {
 	implementations := map[string]func(*node, *node, *list){
-		"mergeIter": mergeIter,
+		"mergeIter":          mergeIter,
+		"mergeIterDfsInline": mergeIterDfsInline,
 	}
 
 	for name, f := range implementations {
@@ -17,6 +18,17 @@ func TestMergeImplementations(t *testing.T) {
 			got := &list{}
 
 			f(n1, nil, got)
+
+			want := []int{
+				1, 2, 3,
+			}
+			assertList(t, got, want)
+		})
+		t.Run(name+"/OnlyRightTree", func(t *testing.T) {
+			n2 := New(2, 1, 3)
+			got := &list{}
+
+			f(nil, n2, got)
 
 			want := []int{
 				1, 2, 3,

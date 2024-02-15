@@ -1,5 +1,9 @@
 package treemerge
 
+import (
+	"fmt"
+)
+
 type node struct {
 	Value int
 	Left  *node
@@ -117,7 +121,7 @@ func dfs(n *node) {
 	dfs(n.Right)
 }
 
-// merge solves exercise 3.10 3-14.
+// mergeIter solves exercise 3.10 3-14.
 // Uses an iterative algorithm that runs in O(N+M) time and O(N+M) space.
 func mergeIter(n1, n2 *node, result *list) {
 	var c1 []int
@@ -190,4 +194,150 @@ func collectInOrder(n *node, vals []int) []int {
 	vals = append(vals, n.Value)
 	vals = collectInOrder(n.Right, vals)
 	return vals
+}
+
+// mergeIterDfsInline solves exercise 3.10 3-14.
+// Uses an iterative algorithm that runs in O(N+M) time and O(N+M) space.
+func mergeIterDfsInline(n1, n2 *node, result *list) {
+	if n1 == nil && n2 == nil {
+		return
+	}
+
+	var n1Stack []*node
+	if n1 != nil {
+		n1Stack = []*node{n1}
+	}
+	n1Visited := make(map[*node]struct{})
+	var n2Stack []*node
+	if n2 != nil {
+		n2Stack = []*node{n2}
+	}
+	n2Visited := make(map[*node]struct{})
+
+	for len(n1Stack) > 0 || len(n2Stack) > 0 {
+		// collect n2 in order if n1 is empty
+		if len(n1Stack) == 0 {
+			c2 := n2Stack[len(n2Stack)-1]
+			if _, visited := n2Visited[c2.Left]; c2.Left != nil && !visited {
+				n2Stack = append(n2Stack, c2.Left)
+				continue
+			}
+
+			// insert, mark and pop
+			result.Insert(c2.Value)
+			n2Visited[c2] = struct{}{}
+			if len(n2Stack) > 1 {
+				n2Stack = n2Stack[:len(n2Stack)-1]
+			} else {
+				n2Stack = nil
+			}
+
+			if _, visited := n2Visited[c2.Right]; c2.Right != nil && !visited {
+				n2Stack = append(n2Stack, c2.Right)
+				continue
+			}
+
+			continue
+		}
+		// collect n1 in order if n1 is empty
+		if len(n2Stack) == 0 {
+			c1 := n1Stack[len(n1Stack)-1]
+			if _, visited := n1Visited[c1.Left]; c1.Left != nil && !visited {
+				n1Stack = append(n1Stack, c1.Left)
+				continue
+			}
+
+			// insert, mark and pop
+			result.Insert(c1.Value)
+			n1Visited[c1] = struct{}{}
+			if len(n1Stack) > 1 {
+				n1Stack = n1Stack[:len(n1Stack)-1]
+			} else {
+				n1Stack = nil
+			}
+
+			if _, visited := n1Visited[c1.Right]; c1.Right != nil && !visited {
+				n1Stack = append(n1Stack, c1.Right)
+				continue
+			}
+
+			continue
+		}
+
+		c1 := n1Stack[len(n1Stack)-1]
+		c2 := n2Stack[len(n2Stack)-1]
+
+		// go to the leftmost node in both trees
+		if _, visited := n1Visited[c1.Left]; c1.Left != nil && !visited {
+			n1Stack = append(n1Stack, c1.Left)
+			if _, visited := n2Visited[c2.Left]; c2.Left != nil && !visited {
+				n2Stack = append(n2Stack, c2.Left)
+			}
+			continue
+		}
+		if _, visited := n2Visited[c2.Left]; c2.Left != nil && !visited {
+			n2Stack = append(n2Stack, c2.Left)
+			if _, visited := n1Visited[c1.Left]; c1.Left != nil && !visited {
+				n1Stack = append(n1Stack, c1.Left)
+			}
+			continue
+		}
+
+		if c1.Value < c2.Value {
+			// insert, mark and pop
+			result.Insert(c1.Value)
+			n1Visited[c1] = struct{}{}
+			if len(n1Stack) > 1 {
+				n1Stack = n1Stack[:len(n1Stack)-1]
+			} else {
+				n1Stack = nil
+			}
+			if _, visited := n1Visited[c1.Right]; c1.Right != nil && !visited {
+				n1Stack = append(n1Stack, c1.Right)
+			}
+		} else if c2.Value < c1.Value {
+			// insert, mark and pop
+			result.Insert(c2.Value)
+			n2Visited[c2] = struct{}{}
+			if len(n2Stack) > 1 {
+				n2Stack = n2Stack[:len(n2Stack)-1]
+			} else {
+				n2Stack = nil
+			}
+			if _, visited := n2Visited[c2.Right]; c2.Right != nil && !visited {
+				n2Stack = append(n2Stack, c2.Right)
+			}
+		} else {
+			// insert once as they are equal, mark and pop both
+			result.Insert(c1.Value)
+
+			n1Visited[c1] = struct{}{}
+			if len(n1Stack) > 1 {
+				n1Stack = n1Stack[:len(n1Stack)-1]
+			} else {
+				n1Stack = nil
+			}
+			if _, visited := n1Visited[c1.Right]; c1.Right != nil && !visited {
+				n1Stack = append(n1Stack, c1.Right)
+			}
+
+			n2Visited[c2] = struct{}{}
+			if len(n2Stack) > 1 {
+				n2Stack = n2Stack[:len(n2Stack)-1]
+			} else {
+				n2Stack = nil
+			}
+			if _, visited := n2Visited[c2.Right]; c2.Right != nil && !visited {
+				n2Stack = append(n2Stack, c2.Right)
+			}
+		}
+	}
+}
+
+func printStack(name string, stack []*node) {
+	var values []int
+	for _, v := range stack {
+		values = append(values, v.Value)
+	}
+	fmt.Printf("%q %v\n", name, values)
 }
