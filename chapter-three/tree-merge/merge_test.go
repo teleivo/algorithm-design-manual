@@ -8,6 +8,7 @@ import (
 
 func TestMergeImplementations(t *testing.T) {
 	implementations := map[string]func(*node, *node, *list){
+		"merge":              merge,
 		"mergeIter":          mergeIter,
 		"mergeIterDfsInline": mergeIterDfsInline,
 	}

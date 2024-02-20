@@ -1,3 +1,4 @@
+// Package treemerge solves exercise 3.10 3-14. I implemented it recursively and iteratively.
 package treemerge
 
 import (
@@ -69,6 +70,7 @@ func (l *list) Insert(value int) {
 	l.tail = n
 }
 
+// TODO
 // merge solves exercise 3.10 3-14.
 // Uses a recursive algorithm that runs in O(N+M) time and O(N+M) space.
 func merge(n1, n2 *node, result *list) {
@@ -76,28 +78,73 @@ func merge(n1, n2 *node, result *list) {
 		return
 	}
 
+	mergeRecur(n1, n2, result)
+}
+
+func mergeRecur(n1, n2 *node, result *list) (*node, *node) {
 	if n1 == nil {
 		collect(n2, result)
-		return
+		return nil, nil
 	}
 	if n2 == nil {
 		collect(n1, result)
-		return
+		return nil, nil
 	}
 
-	if n1.Value == n2.Value {
-		merge(n1.Left, n2.Left, result)
-		result.Insert(n1.Value)
-		merge(n1.Right, n2.Right, result)
-	} else if n1.Value < n2.Value {
-		collect(n1.Left, result)
-		result.Insert(n1.Value)
-		merge(n1.Right, n2, result)
-	} else {
-		collect(n2.Left, result)
-		result.Insert(n2.Value)
-		merge(n1, n2.Right, result)
+	var n1Next, n2Next *node
+	// go to minimum in both trees
+	if n1.Left != nil && n2.Left != nil {
+		n1Next, n2Next = mergeRecur(n1.Left, n2.Left, result)
+	} else if n1.Left != nil {
+		n1Next, n2Next = mergeRecur(n1.Left, n2, result)
+	} else if n2.Left != nil {
+		n1Next, n2Next = mergeRecur(n1, n2.Left, result)
 	}
+
+	if n1Next == nil && n2Next == nil {
+		if n1.Value < n2.Value {
+			result.Insert(n1.Value)
+			n1 = collectUntil(n1.Right, n2.Value, result)
+			result.Insert(n2.Value)
+			return mergeRecur(n1, n2.Right, result)
+		} else if n1.Value > n2.Value {
+			result.Insert(n2.Value)
+			n2 = collectUntil(n2.Right, n1.Value, result)
+			result.Insert(n1.Value)
+			return mergeRecur(n1.Right, n2, result)
+		} else {
+			result.Insert(n1.Value)
+			return nil, nil
+		}
+	}
+
+	if n1Next != nil {
+		n1 = collectUntil(n1, n2.Value, result)
+		result.Insert(n2.Value)
+		return mergeRecur(n1, n2.Right, result)
+	} else {
+		n2 = collectUntil(n2, n1.Value, result)
+		result.Insert(n1.Value)
+		return mergeRecur(n1.Right, n2, result)
+	}
+}
+
+func collectUntil(n *node, upper int, result *list) *node {
+	if n == nil {
+		return n
+	}
+
+	out := collectUntil(n.Left, upper, result)
+	if out != nil {
+		return out
+	}
+
+	if n.Value >= upper {
+		return n
+	}
+
+	result.Insert(n.Value)
+	return collectUntil(n.Right, upper, result)
 }
 
 // collect node values in result using DFS in-order traversal.
@@ -198,6 +245,8 @@ func collectInOrder(n *node, vals []int) []int {
 
 // mergeIterDfsInline solves exercise 3.10 3-14.
 // Uses an iterative algorithm that runs in O(N+M) time and O(N+M) space.
+// SUPER UGLY! Don't want to spend time refactoring though. I just wanted to explore doing an
+// iterative dfs on both trees.
 func mergeIterDfsInline(n1, n2 *node, result *list) {
 	if n1 == nil && n2 == nil {
 		return
