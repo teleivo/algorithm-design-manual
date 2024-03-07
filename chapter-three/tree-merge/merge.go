@@ -59,19 +59,19 @@ func findSuccessor(n *node) *node {
 		return successor
 	}
 
-	val := findMin(n.Right)
-	n.Right = deleteNode(n.Right, val)
-	successor := &node{Value: val, Left: n.Left, Right: n.Right}
+	minNode := findMin(n.Right)
+	n.Right = deleteNode(n.Right, minNode.Value)
+	successor := &node{Value: minNode.Value, Left: n.Left, Right: n.Right}
 	n.Left, n.Right = nil, nil
 	return successor
 }
 
-func findMin(n *node) int {
+func findMin(n *node) *node {
 	if n == nil {
-		return 0
+		return nil
 	}
 	if n.Left == nil {
-		return n.Value
+		return n
 	}
 
 	return findMin(n.Left)
@@ -126,7 +126,7 @@ func (l *list) Insert(value int) {
 	l.tail = n
 }
 
-// TODO
+// TODO solve recursively without mutation?
 // merge solves exercise 3.10 3-14.
 // Uses a recursive algorithm that runs in O(N+M) time and O(N+M) space.
 func merge(n1, n2 *node, result *list) {
@@ -184,6 +184,44 @@ func dfs(n *node) {
 	dfs(n.Left)
 	// n.Value
 	dfs(n.Right)
+}
+
+// mergeRecurMutate solves exercise 3.10 3-14.
+// Uses a recursive algorithm that mutates the inputs! This is not a good API and also an inefficien
+// implementation. It is easy to read though. The nodes themselves to keep track of the work that is
+// left. I implemented it just to explore how I could implement a recursive algorithm without
+// mutation.
+func mergeRecurMutate(n1, n2 *node, result *list) {
+	if n1 == nil && n2 == nil {
+		return
+	}
+
+	if n1 != nil && n2 != nil {
+		n1Min := findMin(n1)
+		n2Min := findMin(n2)
+
+		if n1Min.Value < n2Min.Value {
+			result.Insert(n1Min.Value)
+			n1 = deleteNode(n1, n1Min.Value)
+		} else if n2Min.Value < n1Min.Value {
+			result.Insert(n2Min.Value)
+			n2 = deleteNode(n2, n2Min.Value)
+		} else {
+			result.Insert(n1Min.Value)
+			n1 = deleteNode(n1, n1Min.Value)
+			n2 = deleteNode(n2, n2Min.Value)
+		}
+	} else if n1 != nil {
+		n1Min := findMin(n1)
+		result.Insert(n1Min.Value)
+		n1 = deleteNode(n1, n1Min.Value)
+	} else {
+		n2Min := findMin(n2)
+		result.Insert(n2Min.Value)
+		n2 = deleteNode(n2, n2Min.Value)
+	}
+
+	mergeRecurMutate(n1, n2, result)
 }
 
 // mergeIter solves exercise 3.10 3-14.

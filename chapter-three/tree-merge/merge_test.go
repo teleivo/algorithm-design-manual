@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/teleivo/algorithm-design-manual/assert"
+	"github.com/teleivo/algorithm-design-manual/require"
 )
 
 func TestMergeImplementations(t *testing.T) {
@@ -11,6 +12,7 @@ func TestMergeImplementations(t *testing.T) {
 		// "merge":              merge,
 		"mergeIter":          mergeIter,
 		"mergeIterDfsInline": mergeIterDfsInline,
+		"mergeRecurMutate":   mergeRecurMutate,
 	}
 
 	for name, f := range implementations {
@@ -88,10 +90,6 @@ func TestMergeImplementations(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	// TODO write shell of merge func so I can implement that right away using delete
-	// TODO min should return nil for this case. right now its 0 which can suggest
-	// that there is a 0 in the tree
-	// TODO write separate min tests
 	t.Run("RootWithOnlyLeftChild", func(t *testing.T) {
 		n1 := New(5, 2, 1)
 
@@ -187,6 +185,32 @@ func TestDelete(t *testing.T) {
 
 		want := New(5, 7, 9)
 		assert.EqualValues(t, got, want)
+	})
+}
+
+func TestFindMin(t *testing.T) {
+	t.Run("FullTree", func(t *testing.T) {
+		n1 := New(5, 3, 20, 15, 25, 18, 16, 7, 19, 1, 4, 24, -1, 28)
+
+		got := findMin(n1)
+
+		require.NotNil(t, got)
+		assert.Equals(t, got.Value, -1)
+	})
+	t.Run("SingleNode", func(t *testing.T) {
+		n1 := New(5)
+
+		got := findMin(n1)
+
+		require.NotNil(t, got)
+		assert.Equals(t, got.Value, 5)
+	})
+	t.Run("Nil", func(t *testing.T) {
+		n1 := New()
+
+		got := findMin(n1)
+
+		require.Nil(t, got)
 	})
 }
 
