@@ -21,6 +21,62 @@ func New(values ...int) *node {
 	return root
 }
 
+func deleteNode(n *node, value int) *node {
+	if n == nil {
+		return n
+	}
+
+	if n.Value == value {
+		return findSuccessor(n)
+	}
+
+	if n.Left != nil && n.Right == nil && n.Left.Value == value {
+		n.Left = findSuccessor(n.Left)
+		return n
+	} else if n.Left == nil && n.Right != nil && n.Right.Value == value {
+		n.Right = findSuccessor(n.Right)
+		return n
+	}
+
+	if value < n.Value {
+		n.Left = deleteNode(n.Left, value)
+	} else {
+		n.Right = deleteNode(n.Right, value)
+	}
+	return n
+}
+
+func findSuccessor(n *node) *node {
+	if n.Left == nil && n.Right == nil {
+		return nil
+	} else if n.Left != nil && n.Right == nil {
+		successor := n.Left
+		n.Left = nil
+		return successor
+	} else if n.Left == nil && n.Right != nil {
+		successor := n.Right
+		n.Right = nil
+		return successor
+	}
+
+	val := findMin(n.Right)
+	n.Right = deleteNode(n.Right, val)
+	successor := &node{Value: val, Left: n.Left, Right: n.Right}
+	n.Left, n.Right = nil, nil
+	return successor
+}
+
+func findMin(n *node) int {
+	if n == nil {
+		return 0
+	}
+	if n.Left == nil {
+		return n.Value
+	}
+
+	return findMin(n.Left)
+}
+
 func insert(n, parent *node, value int) *node {
 	if n == nil {
 		return &node{Value: value}
@@ -78,55 +134,17 @@ func merge(n1, n2 *node, result *list) {
 		return
 	}
 
-	mergeRecur(n1, n2, result)
+	n1Next, n2Next := mergeRecur(n1, n2, result)
+	if n1Next == nil {
+		collect(n2Next, result)
+	}
+	if n2Next == nil {
+		collect(n1Next, result)
+	}
 }
 
 func mergeRecur(n1, n2 *node, result *list) (*node, *node) {
-	if n1 == nil {
-		collect(n2, result)
-		return nil, nil
-	}
-	if n2 == nil {
-		collect(n1, result)
-		return nil, nil
-	}
-
-	var n1Next, n2Next *node
-	// go to minimum in both trees
-	if n1.Left != nil && n2.Left != nil {
-		n1Next, n2Next = mergeRecur(n1.Left, n2.Left, result)
-	} else if n1.Left != nil {
-		n1Next, n2Next = mergeRecur(n1.Left, n2, result)
-	} else if n2.Left != nil {
-		n1Next, n2Next = mergeRecur(n1, n2.Left, result)
-	}
-
-	if n1Next == nil && n2Next == nil {
-		if n1.Value < n2.Value {
-			result.Insert(n1.Value)
-			n1 = collectUntil(n1.Right, n2.Value, result)
-			result.Insert(n2.Value)
-			return mergeRecur(n1, n2.Right, result)
-		} else if n1.Value > n2.Value {
-			result.Insert(n2.Value)
-			n2 = collectUntil(n2.Right, n1.Value, result)
-			result.Insert(n1.Value)
-			return mergeRecur(n1.Right, n2, result)
-		} else {
-			result.Insert(n1.Value)
-			return nil, nil
-		}
-	}
-
-	if n1Next != nil {
-		n1 = collectUntil(n1, n2.Value, result)
-		result.Insert(n2.Value)
-		return mergeRecur(n1, n2.Right, result)
-	} else {
-		n2 = collectUntil(n2, n1.Value, result)
-		result.Insert(n1.Value)
-		return mergeRecur(n1.Right, n2, result)
-	}
+	return nil, nil
 }
 
 func collectUntil(n *node, upper int, result *list) *node {
