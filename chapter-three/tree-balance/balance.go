@@ -33,6 +33,10 @@ func Insert(n *node, value int) *node {
 }
 
 // IsBalanced returns true if the height of left and right subtrees is never more than 1.
+// IsBalanced solves exercise 3.10 3-17. Peek 2 levels down on left and right children if only one
+// of them is non nil. Else use tree recursion.
+// Time: O(N)
+// Space: O(1)
 func IsBalanced(n *node) bool {
 	if n == nil {
 		return true
