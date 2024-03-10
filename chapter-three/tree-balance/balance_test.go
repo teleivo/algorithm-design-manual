@@ -6,7 +6,6 @@ import (
 	"github.com/teleivo/algorithm-design-manual/assert"
 )
 
-// TODO implement solution
 func TestBalance(t *testing.T) {
 	tests := map[string]struct {
 		in []int
@@ -56,6 +55,19 @@ func TestBalance(t *testing.T) {
 		})
 	}
 }
+
+func FuzzBalance(f *testing.F) {
+	// unbalanced seed corpus
+	f.Add(5, 3, 20, 15, 25, 18, 24, 28, 16, 19)
+	f.Fuzz(func(t *testing.T, a int, b int, c int, d int, e int, f int, g int, h int, i int, j int) {
+		n := New(a, b, c, d, e, f, g, h, i, j)
+
+		got := Balance(n)
+
+		assert.True(t, IsBalanced(got))
+	})
+}
+
 func TestIsBalanced(t *testing.T) {
 	tests := map[string]struct {
 		in   []int
