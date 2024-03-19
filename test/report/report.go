@@ -46,7 +46,7 @@ func NotNil(t *testing.T, fn report, got any) {
 	t.Helper()
 
 	if got == nil {
-		fn(fmt.Sprintf("got nil want != nil instead", got))
+		fn("got nil want != nil instead")
 	}
 }
 
