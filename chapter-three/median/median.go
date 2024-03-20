@@ -1,6 +1,5 @@
-// Package set solves exercise 3.10 3-20. This solution is based of
-// http://blog.panictank.net/the-algorithm-design-manual-chapter-3 3-8.
-package set
+// Package set solves exercise 3.10 3-22. It is based on the solution of 3.10 3-20.
+package median
 
 // node is a binary search tree.
 type node struct {
@@ -78,4 +77,22 @@ func FindMinK(n *node, k uint) *node {
 
 	// reduce k by the amount of nodes we remove by going right
 	return FindMinK(n.Right, k-n.LeftChildren-1)
+}
+
+// Median returns the median value in given node.
+// Median solves exercise 3.10 3-22.
+// Time: O(log N). Uses either one or two FindMinK operations which run in O(log N) time.
+func Median(n *node) int {
+	if n == nil {
+		// not sure if 0 is ok as median in case of an empty data set
+		// adding an error to the result would be an option. keeping it simple for testing
+		return 0
+	}
+
+	total := n.LeftChildren + n.RightChildren + 1
+	if total%2 != 0 {
+		k := total/2 + 1
+		return FindMinK(n, k).Value
+	}
+	return (FindMinK(n, total/2).Value + FindMinK(n, total/2+1).Value) / 2
 }
