@@ -14,7 +14,6 @@ func FuzzMedianOdd(t *testing.F) {
 	t.Add(1, 2, 3, 4, 5, 6, 7)
 
 	t.Fuzz(func(t *testing.T, a int, b int, c int, d int, e int, f int, g int) {
-		// TODO I was hoping fuzz would shuffle the order
 		nums := []int{a, b, c, d, e, f, g}
 		n := New(nums...)
 		slices.Sort(nums)
