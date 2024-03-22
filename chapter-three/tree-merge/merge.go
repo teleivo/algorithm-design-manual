@@ -15,7 +15,7 @@ func New(values ...int) *node {
 	var root *node
 
 	for _, v := range values {
-		root = insert(root, nil, v)
+		root = insert(root, v)
 	}
 
 	return root
@@ -77,15 +77,15 @@ func findMin(n *node) *node {
 	return findMin(n.Left)
 }
 
-func insert(n, parent *node, value int) *node {
+func insert(n *node, value int) *node {
 	if n == nil {
 		return &node{Value: value}
 	}
 
 	if n.Value > value {
-		n.Left = insert(n.Left, n, value)
+		n.Left = insert(n.Left, value)
 	} else if n.Value < value {
-		n.Right = insert(n.Right, n, value)
+		n.Right = insert(n.Right, value)
 	}
 	return n
 }
