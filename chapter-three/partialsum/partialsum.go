@@ -3,27 +3,31 @@
 package partialsum
 
 type Partial struct {
-	t []int
+	bit []int
 }
 
 // New creates a new Partial. Uses the naive way to initialize the Fenwick tree.
-// Time: O(N log N) can be reduced to O(log N)
+// Time: O(log N)
 // Space: O(N)
 func New(vals ...int) *Partial {
-	p := &Partial{t: make([]int, len(vals)+1)}
+	bit := make([]int, len(vals)+1) // using 1-indexed fenwick tree
 	for i, v := range vals {
-		p.Add(i, v)
+		idx := i + 1
+		bit[idx] += v
+		if r := idx + lowestOneBit(idx); r < len(vals)+1 {
+			bit[r] += bit[idx]
+		}
 	}
 
-	return p
+	return &Partial{bit: bit}
 }
 
 // Sum cumulatively adds all values up to and including index of i.
 func (p *Partial) Sum(i int) int {
 	var result int
 
-	for idx := i + 1; idx > 0; idx -= idx & -idx {
-		result += p.t[idx]
+	for idx := i + 1; idx > 0; idx -= lowestOneBit(idx) {
+		result += p.bit[idx]
 	}
 
 	return result
@@ -31,7 +35,12 @@ func (p *Partial) Sum(i int) int {
 
 // Add adds given value to the value at index of i.
 func (p *Partial) Add(i, val int) {
-	for idx := i + 1; idx < len(p.t); idx += idx & -idx {
-		p.t[idx] += val
+	for idx := i + 1; idx < len(p.bit); idx += lowestOneBit(idx) {
+		p.bit[idx] += val
 	}
+}
+
+// lowestOneBit returns the lowest bit that is set to one.
+func lowestOneBit(v int) int {
+	return v & -v
 }
