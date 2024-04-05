@@ -13,6 +13,7 @@ func TestPartial(t *testing.T) {
 
 	p := New(vals...)
 
+	// test that each partial sum is valid
 	for i := range vals {
 		t.Run("Sum/"+strconv.Itoa(i), func(t *testing.T) {
 			got := p.Sum(i)
@@ -22,6 +23,7 @@ func TestPartial(t *testing.T) {
 		})
 	}
 
+	// test that each partial sum is valid after an update
 	for i := range vals {
 		p.Add(i, i)
 		vals[i] += i
