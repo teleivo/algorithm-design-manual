@@ -7,13 +7,21 @@ import (
 )
 
 func TestHotel(t *testing.T) {
-	n := 8
-	availableRooms := n
-	h := New(n)
+	t.Run("CheckInAllRoomsInOrder", func(t *testing.T) {
+		n := 3
+		availableRooms := n
+		h := New(n)
 
-	require.Equals(t, h.Count(1, n), n)
+		require.Equals(t, h.Count(1, n), n)
 
-	require.Equals(t, h.Checkin(n), 1)
-	availableRooms--
-	require.Equals(t, h.Count(1, n), availableRooms)
+		for i := 1; i <= n; i++ {
+			// t.Run(strconv.Itoa(i), func(t *testing.T) {
+			t.Logf("checkin: %d", i)
+			require.Equals(t, h.Checkin(1, n), i)
+			availableRooms--
+			t.Logf("count: %d", i)
+			require.Equals(t, h.Count(1, n), availableRooms)
+			// })
+		}
+	})
 }
