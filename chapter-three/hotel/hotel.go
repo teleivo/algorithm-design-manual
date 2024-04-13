@@ -1,20 +1,26 @@
 package hotel
 
 import (
+	"fmt"
 	"math"
 )
 
 type rooms struct {
-	occupied       []bool // indicates if the room at given index is available
-	availableCount []int  // Fenwick tree storing prefix sums to provide Count(l, h) of available rooms
-	checkin1       []int  // Fenwick tree storing min range to provide Checkin(l, h)
-	checkin2       []int  // Fenwick tree storing min range to provide Checkin(l, h) mirror of checkin2
+	occupied       []int // indicates if the room at given index is occupied via MaxInt
+	availableCount []int // Fenwick tree storing prefix sums to provide Count(l, h) of available rooms
+	checkin1       []int // Fenwick tree storing min range to provide Checkin(l, h)
+	checkin2       []int // Fenwick tree storing min range to provide Checkin(l, h) mirror of checkin2
 }
 
 // Time: O(N)
 // Space: O(N)
 func New(n int) *rooms {
 	n++ // using 1-indexed Fenwick trees
+
+	occupied := make([]int, n)
+	for i := range occupied {
+		occupied[i] = i
+	}
 
 	availableCount := make([]int, n)
 	for i := 1; i < n; i++ {
@@ -33,9 +39,8 @@ func New(n int) *rooms {
 	// move bit value to immediate parent leads to O(N)
 	for i := 1; i < n; i++ {
 		checkin1[i] = min(checkin1[i], i)
-		idx := i + lsb(i)
-		if idx < n {
-			checkin1[idx] = min(checkin1[idx], checkin1[i])
+		if j := i + lsb(i); j < n {
+			checkin1[j] = min(checkin1[j], checkin1[i])
 		}
 	}
 
@@ -47,14 +52,13 @@ func New(n int) *rooms {
 	// move bit value to immediate parent leads to O(N)
 	for i := n - 1; i > 0; i-- {
 		checkin2[i] = min(checkin2[i], i)
-		idx := i - lsb(i)
-		if idx > 0 {
-			checkin2[idx] = min(checkin2[idx], checkin1[i])
+		if j := i - lsb(i); j > 0 {
+			checkin2[j] = min(checkin2[j], checkin2[i])
 		}
 	}
 
 	return &rooms{
-		occupied:       make([]bool, n),
+		occupied:       occupied,
 		availableCount: availableCount,
 		checkin1:       checkin1,
 		checkin2:       checkin2,
@@ -83,89 +87,111 @@ func (r *rooms) sum(l int) int {
 // occupied. Returns -1 if all rooms in given range are occupied.
 // Time: O(log N)
 func (r *rooms) Checkin(l, h int) int {
+	fmt.Printf("Checkin(%d, %d) rooms before %#v\n", l, h, r)
 	room := r.minRange(l, h)
+	if room == math.MaxInt {
+		return room
+	}
+
 	r.occupy(room)
+	fmt.Printf("Checkin(%d, %d) rooms after %#v\n", l, h, r)
 	return room
 }
 
 func (r *rooms) minRange(l, h int) int {
 	room := math.MaxInt
+	// fmt.Printf("minRange(%d, %d) rooms: %#v\n", l, h, r)
 
 	for idx := l; idx <= h; idx = idx + lsb(idx) {
 		lowerBoundCheckin1 := idx - lsb(idx) + 1
 		upperBoundCheckin2 := idx + lsb(idx) - 1
-		if idx >= lowerBoundCheckin1 {
-			room = min(room, r.checkin1[idx])
-		} else if idx <= upperBoundCheckin2 {
-			room = min(room, r.checkin2[idx])
+		// compare to value that is in range i-j which is either bit1, bit2 or original
+		if lowerBoundCheckin1 < l {
+			if upperBoundCheckin2 > h {
+				room = min(room, idx)
+			} else {
+				room = min(room, r.checkin2[idx])
+			}
 		} else {
-			room = min(room, idx)
+			room = min(room, r.checkin1[idx])
 		}
 	}
 
 	for idx := h; idx >= l; idx = idx - lsb(idx) {
 		lowerBoundCheckin1 := idx - lsb(idx) + 1
 		upperBoundCheckin2 := idx + lsb(idx) - 1
-		if idx >= lowerBoundCheckin1 {
-			room = min(room, r.checkin1[idx])
-		} else if idx <= upperBoundCheckin2 {
-			room = min(room, r.checkin2[idx])
+		// compare to value that is in range i-j which is either bit1, bit2 or original
+		if lowerBoundCheckin1 < l {
+			if upperBoundCheckin2 > h {
+				room = min(room, idx)
+			} else {
+				room = min(room, r.checkin2[idx])
+			}
 		} else {
-			room = min(room, idx)
+			room = min(room, r.checkin1[idx])
 		}
 	}
 
+	fmt.Printf("minRange(%d, %d) = %d\n", l, h, room)
 	return room
 }
 
 func (r *rooms) occupy(l int) {
-	r.occupied[l] = true
+	r.update(l, math.MaxInt)
+}
 
-	for idx := l; idx < len(r.availableCount); idx = idx + lsb(idx) {
-		r.availableCount[idx]--
+// TODO implement
+func (r *rooms) update(l, value int) {
+	n := len(r.occupied)
+	for idx := l; idx < n; idx = idx + lsb(idx) {
+		if value == math.MaxInt {
+			r.availableCount[idx]--
+		} else {
+			r.availableCount[idx]++
+		}
 	}
 
-	for idx := l; idx < len(r.checkin1); idx = idx + lsb(idx) {
-		if idx == l {
-			if r.checkin1[idx] == l {
-				// make the room itself unavailable if the ranges' min is set to the room itself
-				// otherwise it has to point to a lower room number and thus keep it as is
-				r.checkin1[idx] = math.MaxInt
-			} else {
-				break
-			}
+	oldValue := r.occupied[l]
+	r.occupied[l] = value
+
+	for idx := l; idx < n; idx = idx + lsb(idx) {
+		if r.checkin1[idx] != oldValue {
+			r.checkin1[idx] = min(r.checkin1[idx], value)
 		} else {
-			if r.occupied[idx] {
-				r.checkin1[idx] = math.MaxInt
-			} else {
-				r.checkin1[idx] = min(idx, r.checkin1[idx-lsb(idx)+1])
+			x, y := idx-lsb(idx)+1, idx
+			fmt.Printf("update(%d) tree1\n", idx)
+			newMin := value
+			if x <= l-1 {
+				newMin = min(newMin, r.minRange(x, l-1))
 			}
+			// TODO Add && l+1 > 0?
+			if l+1 <= y {
+				newMin = min(newMin, r.minRange(l+1, y))
+			}
+			r.checkin1[idx] = newMin
 		}
 	}
 
 	for idx := l; idx > 0; idx = idx - lsb(idx) {
-		if idx == l {
-			if r.checkin2[idx] == l {
-				// make the room itself unavailable if the ranges' min is set to the room itself
-				// otherwise it has to point to a lower room number and thus keep it as is
-				r.checkin2[idx] = math.MaxInt
-			} else {
-				break
-			}
+		if r.checkin2[idx] != oldValue {
+			r.checkin2[idx] = min(r.checkin2[idx], value)
 		} else {
-			if r.occupied[idx] {
-				r.checkin2[idx] = math.MaxInt
-			} else {
-				r.checkin2[idx] = min(idx, r.checkin2[idx+lsb(idx)-1])
+			x, y := idx, idx+lsb(idx)-1
+			fmt.Printf("update(%d) tree2\n", idx)
+			newMin := value
+			if x <= idx-1 {
+				newMin = min(newMin, r.minRange(x, idx-1))
 			}
+			if idx+1 <= y && y < n {
+				newMin = min(newMin, r.minRange(idx+1, y))
+			}
+			r.checkin2[idx] = newMin
 		}
 	}
 }
 
-// TODO implement
-// Time: O(log N)
-func (r *rooms) Checkout(l int) int {
-	return 0
+func (r *rooms) Checkout(l int) {
+	r.update(l, l)
 }
 
 // lsb returns the least significant bit.
