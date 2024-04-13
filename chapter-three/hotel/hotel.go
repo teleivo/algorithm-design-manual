@@ -84,9 +84,6 @@ func (r *rooms) sum(l int) int {
 // Time: O(log N)
 func (r *rooms) Checkin(l, h int) int {
 	room := r.minRange(l, h)
-	if room == math.MaxInt {
-		return room
-	}
 	r.occupy(room)
 	return room
 }
@@ -95,32 +92,26 @@ func (r *rooms) minRange(l, h int) int {
 	room := math.MaxInt
 
 	for idx := l; idx <= h; idx = idx + lsb(idx) {
-		lowerBoundBit1 := idx - lsb(idx) + 1
-		upperBoundBit2 := idx + lsb(idx) - 1
-		// compare to value that is in range i-j which is either bit1, bit2 or original
-		if lowerBoundBit1 < l {
-			if upperBoundBit2 > h {
-				room = min(room, idx)
-			} else {
-				room = min(room, r.checkin2[idx])
-			}
-		} else {
+		lowerBoundCheckin1 := idx - lsb(idx) + 1
+		upperBoundCheckin2 := idx + lsb(idx) - 1
+		if idx >= lowerBoundCheckin1 {
 			room = min(room, r.checkin1[idx])
+		} else if idx <= upperBoundCheckin2 {
+			room = min(room, r.checkin2[idx])
+		} else {
+			room = min(room, idx)
 		}
 	}
 
 	for idx := h; idx >= l; idx = idx - lsb(idx) {
-		lowerBoundBit1 := idx - lsb(idx) + 1
-		upperBoundBit2 := idx + lsb(idx) - 1
-		// compare to value that is in range i-j which is either bit1, bit2 or original
-		if lowerBoundBit1 < l {
-			if upperBoundBit2 > h {
-				room = min(room, idx)
-			} else {
-				room = min(room, r.checkin2[idx])
-			}
-		} else {
+		lowerBoundCheckin1 := idx - lsb(idx) + 1
+		upperBoundCheckin2 := idx + lsb(idx) - 1
+		if idx >= lowerBoundCheckin1 {
 			room = min(room, r.checkin1[idx])
+		} else if idx <= upperBoundCheckin2 {
+			room = min(room, r.checkin2[idx])
+		} else {
+			room = min(room, idx)
 		}
 	}
 
