@@ -156,41 +156,41 @@ func (r *rooms) update(l, value int) {
 		}
 	}
 
-	oldValue := r.occupied[l]
+	// oldValue := r.occupied[l]
 	r.occupied[l] = value
 
-	for idx := l; idx < n; idx = idx + lsb(idx) {
-		if r.checkin1[idx] != oldValue {
-			r.checkin1[idx] = min(r.checkin1[idx], value)
-		} else {
-			x, y := idx-lsb(idx)+1, idx
-			fmt.Printf("update(%d) tree1\n", idx)
-			newMin := value
-			if x <= l-1 {
-				newMin = min(newMin, r.minRange(x, l-1))
-			}
-			// TODO Add && l+1 > 0?
-			if l+1 <= y {
-				newMin = min(newMin, r.minRange(l+1, y))
-			}
-			r.checkin1[idx] = newMin
+	// checkin1/bit1 update
+	currentMin := math.MaxInt
+	for idx := l; idx < n; idx = idx + lsb(idx) { // climb bit1
+		// get min in range [1,l-1] by climbing bit2 and reading bit1 if that is in idx's range
+		for idxLower := idx - 1; idxLower >= idx-lsb(idx)+1 && idxLower > 0; idxLower = idxLower - lsb(idxLower) {
+			currentMin = min(currentMin, r.checkin1[idxLower])
+		}
+		currentMin = min(currentMin, r.occupied[idx]) // include actual value into current range of min
+		r.checkin1[idx] = currentMin
+
+		// we need range [idx+1, parent of idx (which will be the next to update)]
+		// climb bit1 starting from idx+1 taking values from bit2
+		for idxUpper := idx + 1; idxUpper < n && idxUpper < idx+lsb(idx); idxUpper = idxUpper + lsb(idxUpper) {
+			currentMin = min(currentMin, r.checkin2[idxUpper])
 		}
 	}
 
+	// checkin2/bit2 update
+	currentMin = math.MaxInt
+	// get min in range [l+1, < range of l] by climbing bit1 and reading bit2
+	// so capture all children of l
+	for idx := l + 1; idx < n && idx+lsb(idx)-1 < l+lsb(l)-1; idx = idx + lsb(idx) {
+		currentMin = min(currentMin, r.checkin2[idx])
+	}
 	for idx := l; idx > 0; idx = idx - lsb(idx) {
-		if r.checkin2[idx] != oldValue {
-			r.checkin2[idx] = min(r.checkin2[idx], value)
-		} else {
-			x, y := idx, idx+lsb(idx)-1
-			fmt.Printf("update(%d) tree2\n", idx)
-			newMin := value
-			if x <= idx-1 {
-				newMin = min(newMin, r.minRange(x, idx-1))
-			}
-			if idx+1 <= y && y < n {
-				newMin = min(newMin, r.minRange(idx+1, y))
-			}
-			r.checkin2[idx] = newMin
+		currentMin = min(currentMin, r.occupied[idx]) // include actual value into current range of min
+		r.checkin2[idx] = currentMin
+
+		// we need range [idx-1, children of idx (which will be the next to update)]
+		// climb bit1 starting from idx-1 taking values from bit2
+		for idxUpper := idx - 1; idxUpper > 0 && idxUpper+lsb(idxUpper)-1 < idx+lsb(idx); idxUpper = idxUpper + lsb(idxUpper) {
+			currentMin = min(currentMin, r.checkin2[idx])
 		}
 	}
 }

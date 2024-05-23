@@ -11,6 +11,7 @@ import (
 func TestHotel(t *testing.T) {
 	t.Run("CheckInAndOutOfAllRoomsInOrder", func(t *testing.T) {
 		n := 17
+		// n := 4
 		h := New(n)
 
 		require.Equals(t, h.Count(1, n), n)
