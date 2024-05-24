@@ -143,9 +143,7 @@ func (r *rooms) occupy(l int) {
 	r.update(l, math.MaxInt)
 }
 
-// TODO test some more odd ranges and edge cases
-// TODO simplify code
-// Time: O(log^2 N)
+// Time: O(log N)
 func (r *rooms) update(l, value int) {
 	n := len(r.occupied)
 	for idx := l; idx < n; idx = idx + lsb(idx) {
@@ -160,7 +158,7 @@ func (r *rooms) update(l, value int) {
 
 	// checkin1/bit1 update
 	currentMin := math.MaxInt
-	for idx, prevIdx := l, 0; idx < n; prevIdx, idx = idx, idx+lsb(idx) { // climb bit1
+	for prevIdx, idx := 0, l; idx < n; prevIdx, idx = idx, idx+lsb(idx) { // climb bit1
 		// get min in range [prevIdx,idx-1] if that range is in the range of idx [idx-lsb(idx)+1, idx]
 		for idxLower := idx - 1; idxLower >= idx-lsb(idx)+1 && idxLower > prevIdx && idxLower > 0; idxLower = idxLower - lsb(idxLower) { // climb bit2
 			currentMin = min(currentMin, r.checkin1[idxLower])
@@ -170,22 +168,15 @@ func (r *rooms) update(l, value int) {
 		r.checkin1[idx] = currentMin
 	}
 
-	// checkin2/bit2 update
+	// checkin2/bit2 update (inverse of bit1 update)
 	currentMin = math.MaxInt
-	// get min in range [l+1, < range of l] by climbing bit1 and reading bit2
-	// so capture all children of l
-	for idx := l + 1; idx < n && idx+lsb(idx)-1 < l+lsb(l)-1; idx = idx + lsb(idx) {
-		currentMin = min(currentMin, r.checkin2[idx])
-	}
-	for idx := l; idx > 0; idx = idx - lsb(idx) {
+	for prevIdx, idx := 0, l; idx > 0; prevIdx, idx = idx, idx-lsb(idx) {
+		for idxUpper := idx + 1; idxUpper <= idx+lsb(idx)-1 && idxUpper < prevIdx && idxUpper < n; idxUpper = idxUpper + lsb(idxUpper) { // climb bit1
+			currentMin = min(currentMin, r.checkin2[idxUpper])
+		}
+
 		currentMin = min(currentMin, r.occupied[idx]) // include actual value into current range of min
 		r.checkin2[idx] = currentMin
-
-		// we need range [idx-1, children of idx (which will be the next to update)]
-		// climb bit1 starting from idx-1 taking values from bit2
-		for idxUpper := idx - 1; idxUpper > 0 && idxUpper+lsb(idxUpper)-1 < idx+lsb(idx); idxUpper = idxUpper + lsb(idxUpper) {
-			currentMin = min(currentMin, r.checkin2[idx])
-		}
 	}
 }
 
