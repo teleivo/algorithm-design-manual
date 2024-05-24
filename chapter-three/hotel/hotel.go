@@ -2,7 +2,6 @@
 // prefix sum of available rooms. It is also using Fenwick trees as discussed in the paper
 // "Efficient Range Minimum Queries using Binary Indexed Trees" Mircea DIMA, Rodica CETERCHI
 // https://ioinformatics.org/journal/v9_2015_39_44.pdf
-// TODO Checkin/Checkout are taking O(log^2 N) time and are not yet optimized to take O(log N) time.
 package hotel
 
 import (
@@ -105,7 +104,6 @@ func (r *rooms) Checkin(l, h int) int {
 
 func (r *rooms) minRange(l, h int) int {
 	room := math.MaxInt
-	// fmt.Printf("minRange(%d, %d) rooms: %#v\n", l, h, r)
 
 	for idx := l; idx <= h; idx = idx + lsb(idx) {
 		lowerBoundCheckin1 := idx - lsb(idx) + 1
@@ -145,6 +143,8 @@ func (r *rooms) occupy(l int) {
 	r.update(l, math.MaxInt)
 }
 
+// TODO test some more odd ranges and edge cases
+// TODO simplify code
 // Time: O(log^2 N)
 func (r *rooms) update(l, value int) {
 	n := len(r.occupied)
@@ -156,24 +156,18 @@ func (r *rooms) update(l, value int) {
 		}
 	}
 
-	// oldValue := r.occupied[l]
 	r.occupied[l] = value
 
 	// checkin1/bit1 update
 	currentMin := math.MaxInt
-	for idx := l; idx < n; idx = idx + lsb(idx) { // climb bit1
-		// get min in range [1,l-1] by climbing bit2 and reading bit1 if that is in idx's range
-		for idxLower := idx - 1; idxLower >= idx-lsb(idx)+1 && idxLower > 0; idxLower = idxLower - lsb(idxLower) {
+	for idx, prevIdx := l, 0; idx < n; prevIdx, idx = idx, idx+lsb(idx) { // climb bit1
+		// get min in range [prevIdx,idx-1] if that range is in the range of idx [idx-lsb(idx)+1, idx]
+		for idxLower := idx - 1; idxLower >= idx-lsb(idx)+1 && idxLower > prevIdx && idxLower > 0; idxLower = idxLower - lsb(idxLower) { // climb bit2
 			currentMin = min(currentMin, r.checkin1[idxLower])
 		}
+
 		currentMin = min(currentMin, r.occupied[idx]) // include actual value into current range of min
 		r.checkin1[idx] = currentMin
-
-		// we need range [idx+1, parent of idx (which will be the next to update)]
-		// climb bit1 starting from idx+1 taking values from bit2
-		for idxUpper := idx + 1; idxUpper < n && idxUpper < idx+lsb(idx); idxUpper = idxUpper + lsb(idxUpper) {
-			currentMin = min(currentMin, r.checkin2[idxUpper])
-		}
 	}
 
 	// checkin2/bit2 update
