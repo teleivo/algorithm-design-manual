@@ -158,9 +158,9 @@ func (r *rooms) update(l, value int) {
 
 	// checkin1/bit1 update
 	currentMin := math.MaxInt
-	for prevIdx, idx := 0, l; idx < n; prevIdx, idx = idx, idx+lsb(idx) { // climb bit1
+	for idx := l; idx < n; idx = idx + lsb(idx) { // climb bit1
 		// get min in range [prevIdx,idx-1] if that range is in the range of idx [idx-lsb(idx)+1, idx]
-		for idxLower := idx - 1; idxLower >= idx-lsb(idx)+1 && idxLower > prevIdx && idxLower > 0; idxLower = idxLower - lsb(idxLower) { // climb bit2
+		for idxLower := idx - 1; idxLower >= idx-lsb(idx)+1 && idxLower > 0; idxLower = idxLower - lsb(idxLower) { // climb bit2
 			currentMin = min(currentMin, r.checkin1[idxLower])
 		}
 
@@ -170,8 +170,8 @@ func (r *rooms) update(l, value int) {
 
 	// checkin2/bit2 update (inverse of bit1 update)
 	currentMin = math.MaxInt
-	for prevIdx, idx := 0, l; idx > 0; prevIdx, idx = idx, idx-lsb(idx) {
-		for idxUpper := idx + 1; idxUpper <= idx+lsb(idx)-1 && idxUpper < prevIdx && idxUpper < n; idxUpper = idxUpper + lsb(idxUpper) { // climb bit1
+	for idx := l; idx > 0; idx = idx - lsb(idx) {
+		for idxUpper := idx + 1; idxUpper <= idx+lsb(idx)-1 && idxUpper < n; idxUpper = idxUpper + lsb(idxUpper) { // climb bit1
 			currentMin = min(currentMin, r.checkin2[idxUpper])
 		}
 
