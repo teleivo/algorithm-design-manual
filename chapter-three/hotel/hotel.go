@@ -2,6 +2,7 @@
 // prefix sum of available rooms. It is also using Fenwick trees as discussed in the paper
 // "Efficient Range Minimum Queries using Binary Indexed Trees" Mircea DIMA, Rodica CETERCHI
 // https://ioinformatics.org/journal/v9_2015_39_44.pdf
+// https://codeforces.com/blog/entry/22062 helped me a lot with the update logic
 package hotel
 
 import (
