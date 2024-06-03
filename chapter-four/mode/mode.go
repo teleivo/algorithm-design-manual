@@ -29,8 +29,8 @@ func modeUsingSort(in []int) int {
 	slices.Sort(sortedIn)
 
 	mode := math.MinInt
-	for i, curFrequency, maxFrequency := 1, 1, 1; i < len(sortedIn)-1; i++ {
-		if sortedIn[i-1] == sortedIn[i] {
+	for i, curFrequency, maxFrequency := 0, 1, 1; i < len(sortedIn)-1; i++ {
+		if sortedIn[i] == sortedIn[i+1] {
 			curFrequency++
 		} else {
 			curFrequency = 1
