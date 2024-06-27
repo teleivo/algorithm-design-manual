@@ -15,6 +15,16 @@ func TestExists(t *testing.T) {
 		want bool
 	}{
 		{
+			k:    1,
+			sum:  14,
+			want: true,
+		},
+		{
+			k:    1,
+			sum:  11,
+			want: false,
+		},
+		{
 			k:    2,
 			sum:  5,
 			want: true,
@@ -42,6 +52,11 @@ func TestExists(t *testing.T) {
 		{
 			k:    2,
 			sum:  24,
+			want: true,
+		},
+		{
+			k:    2,
+			sum:  27,
 			want: true,
 		},
 		{
@@ -90,7 +105,6 @@ func TestExists(t *testing.T) {
 			want: true,
 		},
 	}
-	// TODO add edge case test for finding things at the end
 
 	for _, tc := range tests {
 		t.Logf("exists(%d, %v, %d)\n", tc.k, in, tc.sum)
