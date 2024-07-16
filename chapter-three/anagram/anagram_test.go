@@ -3,7 +3,7 @@ package anagram
 import (
 	"testing"
 
-	"github.com/teleivo/algorithm-design-manual/assert"
+	"github.com/teleivo/assertive/assert"
 )
 
 func TestIsAnagram(t *testing.T) {

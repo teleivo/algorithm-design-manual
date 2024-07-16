@@ -4,7 +4,7 @@ package tictactoe
 import (
 	"testing"
 
-	"github.com/teleivo/algorithm-design-manual/require"
+	"github.com/teleivo/assertive/require"
 )
 
 func TestTicTacToe(t *testing.T) {

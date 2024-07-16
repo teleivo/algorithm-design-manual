@@ -3,7 +3,7 @@ package grinch
 import (
 	"testing"
 
-	"github.com/teleivo/algorithm-design-manual/assert"
+	"github.com/teleivo/assertive/assert"
 )
 
 func TestPartition(t *testing.T) {

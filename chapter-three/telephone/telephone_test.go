@@ -5,8 +5,8 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	"github.com/teleivo/algorithm-design-manual/assert"
-	"github.com/teleivo/algorithm-design-manual/require"
+	"github.com/teleivo/assertive/assert"
+	"github.com/teleivo/assertive/require"
 )
 
 func TestWords(t *testing.T) {

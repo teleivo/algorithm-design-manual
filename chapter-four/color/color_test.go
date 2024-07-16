@@ -3,7 +3,7 @@ package color
 import (
 	"testing"
 
-	"github.com/teleivo/algorithm-design-manual/assert"
+	"github.com/teleivo/assertive/assert"
 )
 
 func TestSort(t *testing.T) {

@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/teleivo/algorithm-design-manual/assert"
+	"github.com/teleivo/assertive/assert"
 )
 
 func TestUnion(t *testing.T) {

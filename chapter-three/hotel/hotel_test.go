@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/teleivo/algorithm-design-manual/require"
+	"github.com/teleivo/assertive/require"
 )
 
 func TestHotel(t *testing.T) {

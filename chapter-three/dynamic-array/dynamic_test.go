@@ -3,7 +3,7 @@ package dynamic
 import (
 	"testing"
 
-	"github.com/teleivo/algorithm-design-manual/require"
+	"github.com/teleivo/assertive/require"
 )
 
 func TestArray(t *testing.T) {
@@ -21,13 +21,13 @@ func TestArray(t *testing.T) {
 
 				a.insert(i, i)
 
-				require.Equals(t,  a.len(), i+1)
+				require.Equals(t, a.len(), i+1)
 				// double if full
 				if curLen == curCap {
 					wantCap := max(curCap*2, 1)
 					require.Equals(t, a.cap(), wantCap)
 				} else {
-					require.Equals(t,  a.cap(), curCap)
+					require.Equals(t, a.cap(), curCap)
 				}
 			}
 		}
@@ -35,13 +35,13 @@ func TestArray(t *testing.T) {
 		{
 			t.Log("InsertBelowLen")
 
-			require.Equals(t,  a.len(), 16)
-			require.Equals(t,  a.cap(), 16)
+			require.Equals(t, a.len(), 16)
+			require.Equals(t, a.cap(), 16)
 
 			a.insert(15, 90)
 
-			require.Equals(t,  a.len(), 16)
-			require.Equals(t,  a.cap(), 16)
+			require.Equals(t, a.len(), 16)
+			require.Equals(t, a.cap(), 16)
 		}
 
 		{
@@ -55,7 +55,7 @@ func TestArray(t *testing.T) {
 
 				a.delete()
 
-				require.Equals(t,  a.len(), i-1)
+				require.Equals(t, a.len(), i-1)
 				// shrink by half if quarter full
 				if curLen == curCap/4 {
 					wantCap := curCap / 2
@@ -72,8 +72,8 @@ func TestArray(t *testing.T) {
 
 		a.insert(110, 32)
 
-		require.Equals(t,  a.get(110), 32)
-		require.Equals(t,  a.len(), 111)
-		require.Equals(t,  a.cap(), 111)
+		require.Equals(t, a.get(110), 32)
+		require.Equals(t, a.len(), 111)
+		require.Equals(t, a.cap(), 111)
 	})
 }

@@ -3,8 +3,8 @@ package treemerge
 import (
 	"testing"
 
-	"github.com/teleivo/algorithm-design-manual/assert"
-	"github.com/teleivo/algorithm-design-manual/require"
+	"github.com/teleivo/assertive/assert"
+	"github.com/teleivo/assertive/require"
 )
 
 func TestMergeImplementations(t *testing.T) {

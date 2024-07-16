@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/teleivo/algorithm-design-manual/assert"
+	"github.com/teleivo/assertive/assert"
 )
 
 func TestIntersect(t *testing.T) {
@@ -86,7 +86,7 @@ func TestContains(t *testing.T) {
 	for _, test := range tests {
 		got := a.Contains(test.in)
 
-		assert.Equals(t, got, test.want)
+		assert.Equalsf(t, got, test.want, "Contains(%d)", test.in)
 	}
 }
 

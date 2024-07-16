@@ -5,7 +5,7 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-	"github.com/teleivo/algorithm-design-manual/require"
+	"github.com/teleivo/assertive/require"
 )
 
 func TestList(t *testing.T) {

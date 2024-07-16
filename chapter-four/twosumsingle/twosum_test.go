@@ -3,7 +3,7 @@ package twosum
 import (
 	"testing"
 
-	"github.com/teleivo/algorithm-design-manual/assert"
+	"github.com/teleivo/assertive/assert"
 )
 
 func TestExists(t *testing.T) {

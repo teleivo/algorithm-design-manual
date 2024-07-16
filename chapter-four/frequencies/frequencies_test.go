@@ -3,7 +3,7 @@ package frequencies
 import (
 	"testing"
 
-	"github.com/teleivo/algorithm-design-manual/assert"
+	"github.com/teleivo/assertive/assert"
 )
 
 func TestMajority(t *testing.T) {

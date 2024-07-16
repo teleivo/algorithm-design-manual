@@ -3,7 +3,7 @@ package treeswap
 import (
 	"testing"
 
-	"github.com/teleivo/algorithm-design-manual/assert"
+	"github.com/teleivo/assertive/assert"
 )
 
 func TestSwapped(t *testing.T) {

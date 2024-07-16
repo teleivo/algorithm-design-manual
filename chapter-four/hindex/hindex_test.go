@@ -3,7 +3,7 @@ package hindex
 import (
 	"testing"
 
-	"github.com/teleivo/algorithm-design-manual/assert"
+	"github.com/teleivo/assertive/assert"
 )
 
 func TestHindex(t *testing.T) {

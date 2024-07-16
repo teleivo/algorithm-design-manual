@@ -3,7 +3,7 @@ package stack
 import (
 	"testing"
 
-	"github.com/teleivo/algorithm-design-manual/require"
+	"github.com/teleivo/assertive/require"
 )
 
 func TestStack(t *testing.T) {

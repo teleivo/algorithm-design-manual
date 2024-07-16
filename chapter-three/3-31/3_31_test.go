@@ -3,7 +3,7 @@ package problem_331
 import (
 	"testing"
 
-	"github.com/teleivo/algorithm-design-manual/assert"
+	"github.com/teleivo/assertive/assert"
 )
 
 func TestNumbers(t *testing.T) {
